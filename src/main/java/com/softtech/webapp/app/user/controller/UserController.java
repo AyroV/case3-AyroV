@@ -25,7 +25,7 @@ public class UserController {
     public ResponseEntity<?> findAll(@RequestParam(required = false) String username) {
         if (username != null) {
             UserGetDto userGetDto = userService.findByUsername(username);
-            ResponseEntity.ok().body(userGetDto);
+            return ResponseEntity.ok().body(userGetDto);
         }
 
         List<UserGetDto> userGetDtoList = userService.findAll();

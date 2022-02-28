@@ -26,9 +26,9 @@ public class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, 
         return dao.findById(id);
     }
 
-    public E save(E entity, boolean isSystem){
+    public E save(E entity, boolean isSystem, boolean isUpdate){
 
-        setAdditionalFields(entity, isSystem);
+        setAdditionalFields(entity, isSystem, isUpdate);
         entity = dao.save(entity);
 
         return entity;
@@ -46,23 +46,23 @@ public class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, 
         return dao;
     }
 
-    private void setAdditionalFields(E entity, boolean isSystem) {
+    private void setAdditionalFields(E entity, boolean isSystem, boolean isUpdate) {
 
         LocalDateTime date = LocalDateTime.now();
 
-        if(entity.getCreateDate() == null) {
-            entity.setCreateDate(dateTimeFormatter.format(date));
-            if(isSystem)
-                entity.setCreatedBy("SYSTEM");
-            else
-                entity.setCreatedBy("USER");
-        }
-        else {
+        if(isUpdate) {
             entity.setUpdateDate(dateTimeFormatter.format(date));
             if(isSystem)
                 entity.setUpdatedBy("SYSTEM");
             else
                 entity.setUpdatedBy("USER");
+        }
+        else {
+            entity.setCreateDate(dateTimeFormatter.format(date));
+            if(isSystem)
+                entity.setCreatedBy("SYSTEM");
+            else
+                entity.setCreatedBy("USER");
         }
     }
 
@@ -72,7 +72,9 @@ public class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, 
         E entity;
         if (entityOptional.isPresent()){
             entity = entityOptional.get();
-        } else {
+        }
+
+        else {
             if(isRelation)
                 throw new ItemNotFoundException(ErrorMessage.RELATION_NOT_FOUND);
             else

@@ -40,12 +40,14 @@ public class UserService {
     }
 
     public UserGetDto save(UserPostDto userPostDto) {
-        isUnique(userPostDto.getUsername().toUpperCase(), userPostDto.getPhoneNumber(), userPostDto.getUserMail().toUpperCase());
+        isUsernameUnique(userPostDto.getUsername().toUpperCase());
+        isPhoneNumberUnique(userPostDto.getPhoneNumber());
+        isMailUnique(userPostDto.getUserMail().toUpperCase());
 
         User user = mapper.map(userPostDto, User.class);
         user.setUsernameUpper(userPostDto.getUsername().toUpperCase());
         user.setUserMailUpper(userPostDto.getUserMail().toUpperCase());
-        user = userEntityService.save(user, true);
+        user = userEntityService.save(user, true, false);
 
         return mapper.map(user, UserGetDto.class);
     }
@@ -61,16 +63,25 @@ public class UserService {
     }
 
     public UserGetDto update(UserPatchDto userPatchDto, Long id) {
-        isUserExist(id);
+        User user = userEntityService.getByIdWithControl(id, false);
 
-        User user = mapper.map(userPatchDto, User.class);
+        mapper.getConfiguration().setSkipNullEnabled(true);
+        mapper.map(userPatchDto, user);
 
-        isUnique(user.getUsername().toUpperCase(), user.getPhoneNumber(), user.getUserMail().toUpperCase());
+        if(userPatchDto.getUsername() != null) {
+            user.setUsernameUpper(user.getUsername().toUpperCase());
+            isUsernameUnique(user.getUsernameUpper());
+        }
 
-        user.setId(id);
-        user.setUsernameUpper(user.getUsername().toUpperCase());
-        user.setUserMailUpper(user.getUserMail().toUpperCase());
-        user = userEntityService.save(user, true);
+        if(userPatchDto.getPhoneNumber() != null)
+            isPhoneNumberUnique(user.getPhoneNumber());
+
+        if(userPatchDto.getUserMail() != null) {
+            user.setUserMailUpper(user.getUserMail().toUpperCase());
+            isMailUnique(user.getUserMailUpper());
+        }
+
+        user = userEntityService.save(user, true, true);
         return mapper.map(user, UserGetDto.class);
     }
 
@@ -86,14 +97,20 @@ public class UserService {
         }
     }
 
-    private void isUnique(String username, String phoneNumber, String mail) {
+    private void isUsernameUnique(String username) {
         User user = userEntityService.findByUsernameUpper(username);
         if(user != null)
             throw new BusinessException(UserErrorMessage.USERNAME_ALREADY_TAKEN);
-        user = userEntityService.findByPhoneNumber(phoneNumber);
+    }
+
+    private void isPhoneNumberUnique(String phoneNumber) {
+        User user = userEntityService.findByPhoneNumber(phoneNumber);
         if(user != null)
             throw new BusinessException(UserErrorMessage.PHONE_NUMBER_ALREADY_TAKEN);
-        user = userEntityService.findByUserMailUpper(mail);
+    }
+
+    private void isMailUnique(String mail) {
+        User user = userEntityService.findByUserMailUpper(mail);
         if(user != null)
             throw new BusinessException(UserErrorMessage.MAIL_ALREADY_TAKEN);
     }
