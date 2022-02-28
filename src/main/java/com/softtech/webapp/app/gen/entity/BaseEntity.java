@@ -2,26 +2,18 @@ package com.softtech.webapp.app.gen.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.persistence.Embedded;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseEntity {
-    @CreatedDate
-    private String createDate;
+public abstract class BaseEntity implements BaseModel, Cloneable, Serializable {
 
-    @LastModifiedDate
-    private String updateDate;
+    private static final long serialVersionUID = 1L;
 
-    @CreatedBy
-    private String createdBy;
-
-    @LastModifiedBy
-    private String updatedBy;
+    @Embedded
+    private BaseAdditionalFields baseAdditionalFields;
 }

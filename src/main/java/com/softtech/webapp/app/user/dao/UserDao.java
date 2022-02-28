@@ -2,6 +2,7 @@ package com.softtech.webapp.app.user.dao;
 
 import com.softtech.webapp.app.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -47,7 +47,7 @@ public class UserService {
         User user = mapper.map(userPostDto, User.class);
         user.setUsernameUpper(userPostDto.getUsername().toUpperCase());
         user.setUserMailUpper(userPostDto.getUserMail().toUpperCase());
-        user = userEntityService.save(user, true, false);
+        user = userEntityService.save(user, false);
 
         return mapper.map(user, UserGetDto.class);
     }
@@ -81,7 +81,7 @@ public class UserService {
             isMailUnique(user.getUserMailUpper());
         }
 
-        user = userEntityService.save(user, true, true);
+        user = userEntityService.save(user, true);
         return mapper.map(user, UserGetDto.class);
     }
 

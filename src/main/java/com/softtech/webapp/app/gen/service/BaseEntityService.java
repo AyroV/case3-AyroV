@@ -9,14 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, Long>> {
+public abstract class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, Long>> {
     private final D dao;
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     public List<E> findAll(){
         return dao.findAll();
@@ -26,9 +26,9 @@ public class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, 
         return dao.findById(id);
     }
 
-    public E save(E entity, boolean isSystem, boolean isUpdate){
+    public E save(E entity, boolean isUpdate){
 
-        setAdditionalFields(entity, isSystem, isUpdate);
+        setAdditionalFields(entity, isUpdate);
         entity = dao.save(entity);
 
         return entity;
@@ -46,23 +46,18 @@ public class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, 
         return dao;
     }
 
-    private void setAdditionalFields(E entity, boolean isSystem, boolean isUpdate) {
+    private void setAdditionalFields(E entity, boolean isUpdate) {
 
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime dateNow = LocalDateTime.now();
+        Date date = java.sql.Date.valueOf(String.valueOf(dateNow));
 
         if(isUpdate) {
-            entity.setUpdateDate(dateTimeFormatter.format(date));
-            if(isSystem)
-                entity.setUpdatedBy("SYSTEM");
-            else
-                entity.setUpdatedBy("USER");
+            entity.getBaseAdditionalFields().setUpdateDate(date);
+            entity.getBaseAdditionalFields().setUpdatedBy(1L);
         }
         else {
-            entity.setCreateDate(dateTimeFormatter.format(date));
-            if(isSystem)
-                entity.setCreatedBy("SYSTEM");
-            else
-                entity.setCreatedBy("USER");
+            entity.getBaseAdditionalFields().setCreateDate(date);
+            entity.getBaseAdditionalFields().setCreatedBy(1L);
         }
     }
 
