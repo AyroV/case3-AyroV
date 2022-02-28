@@ -1,48 +1,60 @@
 package com.softtech.webapp.app.user.controller;
 
+import com.softtech.webapp.app.user.dto.UserDeleteDto;
 import com.softtech.webapp.app.user.dto.UserGetDto;
+import com.softtech.webapp.app.user.dto.UserPatchDto;
 import com.softtech.webapp.app.user.dto.UserPostDto;
 import com.softtech.webapp.app.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
+@Validated
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<?> findAll(@RequestParam(required = false) String username) {
+        if (username != null) {
+            UserGetDto userGetDto = userService.findByUsername(username);
+            ResponseEntity.ok().body(userGetDto);
+        }
+
         List<UserGetDto> userGetDtoList = userService.findAll();
         return ResponseEntity.ok().body(userGetDtoList);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        UserGetDto userGetDto = userService.findById(id);
+        return ResponseEntity.ok().body(userGetDto);
+    }
+
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody UserPostDto userPostDto) {
+    public ResponseEntity<?> save(@RequestBody @Valid UserPostDto userPostDto) {
         UserGetDto userGetDto = userService.save(userPostDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userGetDto);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
+    @DeleteMapping
+    public ResponseEntity<?> delete(@RequestBody @Valid UserDeleteDto userDeleteDto) {
+        userService.delete(userDeleteDto);
+        return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody UserPatchDto userPatchDto) {
+        UserGetDto userGetDto = userService.update(userPatchDto, id);
+        return ResponseEntity.ok().body(userGetDto);
+    }
+
+
 }

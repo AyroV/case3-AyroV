@@ -60,12 +60,14 @@ public class UserService {
         userEntityService.delete(user);
     }
 
-    public UserGetDto update(UserPatchDto userPatchDto) {
-        isUserExist(userPatchDto.getId());
+    public UserGetDto update(UserPatchDto userPatchDto, Long id) {
+        isUserExist(id);
+
         User user = mapper.map(userPatchDto, User.class);
 
         isUnique(user.getUsername().toUpperCase(), user.getPhoneNumber(), user.getUserMail().toUpperCase());
 
+        user.setId(id);
         user.setUsernameUpper(user.getUsername().toUpperCase());
         user.setUserMailUpper(user.getUserMail().toUpperCase());
         user = userEntityService.save(user, true);
