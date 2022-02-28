@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public void delete(UserDeleteDto userDeleteDto) {
-        User user = userEntityService.findByUsernameUpper(userDeleteDto.getUsername());
+        User user = userEntityService.findByUsername(userDeleteDto.getUsername());
         validateUser(user);
         if(!user.getPhoneNumber().equals(userDeleteDto.getPhoneNumber())) {
             throw new ItemNotFoundException(UserErrorMessage.USERNAME_PHONE_NOT_MATCH);

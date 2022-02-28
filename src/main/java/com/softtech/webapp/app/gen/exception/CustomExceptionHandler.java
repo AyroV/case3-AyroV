@@ -26,7 +26,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest webRequest){
-
         LocalDateTime errorDate = LocalDateTime.now();
         String message = ex.getMessage();
         String description = webRequest.getDescription(false);
