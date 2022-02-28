@@ -1,5 +1,6 @@
 package com.softtech.webapp.app.gen.exception;
 
+import com.softtech.webapp.app.gen.exceptions.BusinessException;
 import com.softtech.webapp.app.gen.exceptions.ItemNotFoundException;
 import com.softtech.webapp.app.gen.exceptions.RelationNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(dateTimeFormatter.format(errorDate), message, description);
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<Object> handleAllBusinessException(BusinessException ex, WebRequest webRequest){
+
+        LocalDateTime errorDate = LocalDateTime.now();
+        String message = ex.getMessage();
+        String description = webRequest.getDescription(false);
+
+        ExceptionResponse exceptionResponse = new ExceptionResponse(dateTimeFormatter.format(errorDate), message, description);
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
