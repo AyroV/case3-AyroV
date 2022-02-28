@@ -33,9 +33,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public final ResponseEntity<Object> handleAllBusinessException(BusinessException ex, WebRequest webRequest){
-
         LocalDateTime errorDate = LocalDateTime.now();
-        String message = ex.getMessage();
+        String message = ex.getErrorMessage().getMessage();
         String description = webRequest.getDescription(false);
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(dateTimeFormatter.format(errorDate), message, description);
@@ -47,7 +46,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleAllItemNotFoundException(ItemNotFoundException ex, WebRequest webRequest){
 
         LocalDateTime errorDate = LocalDateTime.now();
-        String message = ex.getMessage();
+        String message = ex.getErrorMessage().getMessage();
         String description = webRequest.getDescription(false);
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(dateTimeFormatter.format(errorDate), message, description);
@@ -59,7 +58,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleAllRelationNotFoundException(RelationNotFoundException ex, WebRequest webRequest){
 
         LocalDateTime errorDate = LocalDateTime.now();
-        String message = ex.getMessage();
+        String message = ex.getErrorMessage().getMessage();
         String description = webRequest.getDescription(false);
 
         ExceptionResponse exceptionResponse = new ExceptionResponse(dateTimeFormatter.format(errorDate), message, description);
