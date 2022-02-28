@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -49,15 +48,15 @@ public abstract class BaseEntityService<E extends BaseEntity, D extends JpaRepos
     private void setAdditionalFields(E entity, boolean isUpdate) {
 
         LocalDateTime dateNow = LocalDateTime.now();
-        Date date = java.sql.Date.valueOf(String.valueOf(dateNow));
+        Date date = java.sql.Timestamp.valueOf(dateNow);
 
         if(isUpdate) {
-            entity.getBaseAdditionalFields().setUpdateDate(date);
-            entity.getBaseAdditionalFields().setUpdatedBy(1L);
+            entity.setUpdateDate(date);
+            entity.setUpdatedBy(1L);
         }
         else {
-            entity.getBaseAdditionalFields().setCreateDate(date);
-            entity.getBaseAdditionalFields().setCreatedBy(1L);
+            entity.setCreateDate(date);
+            entity.setCreatedBy(1L);
         }
     }
 

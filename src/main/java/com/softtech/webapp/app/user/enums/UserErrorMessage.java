@@ -6,6 +6,7 @@ public enum UserErrorMessage implements IErrorMessage {
     USERNAME_ALREADY_TAKEN("This username is already exists!"),
     PHONE_NUMBER_ALREADY_TAKEN("This phone number is already exists!"),
     MAIL_ALREADY_TAKEN("This e-mail is already exists!"),
+    ID_USERNAME_NOT_MATCH("Given id and username doesn't match"),
     USERNAME_PHONE_NOT_MATCH("Given username and phone number doesn't match")
     ;
 

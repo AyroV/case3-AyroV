@@ -44,9 +44,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userGetDto);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> delete(@RequestBody @Valid UserDeleteDto userDeleteDto) {
-        userService.delete(userDeleteDto);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody @Valid UserDeleteDto userDeleteDto) {
+        userService.delete(userDeleteDto, id);
         return ResponseEntity.noContent().build();
     }
 

@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,9 +53,12 @@ public class UserService {
         return mapper.map(user, UserGetDto.class);
     }
 
-    public void delete(UserDeleteDto userDeleteDto) {
+    public void delete(UserDeleteDto userDeleteDto, Long id) {
         User user = userEntityService.findByUsername(userDeleteDto.getUsername());
         validateUser(user);
+        if (!Objects.equals(user.getId(), id)) {
+            throw new BusinessException(UserErrorMessage.ID_USERNAME_NOT_MATCH);
+        }
         if(!user.getPhoneNumber().equals(userDeleteDto.getPhoneNumber())) {
             throw new ItemNotFoundException(UserErrorMessage.USERNAME_PHONE_NOT_MATCH);
         }
