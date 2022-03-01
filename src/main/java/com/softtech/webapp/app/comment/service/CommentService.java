@@ -29,7 +29,7 @@ public class CommentService {
     }
 
     public List<CommentGetDto> findAllByUserId(Long userId) {
-        userEntityService.getByIdWithControl(userId, false);
+        userEntityService.getByIdWithControl(userId);
         List<Comment> commentList = commentEntityService.findAllByUserId(userId);
         if(commentList.size() == 0)
             throw new ItemNotFoundException(CommentErrorMessage.NO_USER_COMMENT);
@@ -38,7 +38,7 @@ public class CommentService {
     }
 
     public List<CommentGetDto> findAllByProductId(Long productId) {
-        productEntityService.getByIdWithControl(productId, false);
+        productEntityService.getByIdWithControl(productId);
         List<Comment> commentList = commentEntityService.findAllByProductId(productId);
         if(commentList.size() == 0)
             throw new ItemNotFoundException(CommentErrorMessage.NO_PRODUCT_COMMENT);
@@ -47,8 +47,8 @@ public class CommentService {
     }
 
     public CommentGetDto save(CommentPostDto commentPostDto) {
-        userEntityService.getByIdWithControl(commentPostDto.getUserId(), true);
-        productEntityService.getByIdWithControl(commentPostDto.getProductId(), true);
+        userEntityService.getByIdWithControl(commentPostDto.getUserId());
+        productEntityService.getByIdWithControl(commentPostDto.getProductId());
 
         Comment comment = new Comment();
         comment.setCommentText(commentPostDto.getCommentText());
@@ -59,7 +59,7 @@ public class CommentService {
     }
 
     public void delete(Long id) {
-        Comment comment = commentEntityService.getByIdWithControl(id, false);
+        Comment comment = commentEntityService.getByIdWithControl(id);
         commentEntityService.delete(comment);
     }
 }

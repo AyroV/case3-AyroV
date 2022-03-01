@@ -60,20 +60,16 @@ public abstract class BaseEntityService<E extends BaseEntity, D extends JpaRepos
         }
     }
 
-    public E getByIdWithControl(Long id, boolean isRelation) {
+    public E getByIdWithControl(Long id) {
         Optional<E> entityOptional = findById(id);
 
         E entity;
-        if (entityOptional.isPresent()){
-            entity = entityOptional.get();
-        }
 
-        else {
-            if(isRelation)
-                throw new ItemNotFoundException(ErrorMessage.RELATION_NOT_FOUND);
-            else
-                throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
-        }
+        if (entityOptional.isPresent())
+            entity = entityOptional.get();
+        else
+            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+
         return entity;
     }
 }

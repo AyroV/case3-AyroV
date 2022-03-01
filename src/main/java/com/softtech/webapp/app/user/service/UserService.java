@@ -30,7 +30,7 @@ public class UserService {
     }
 
     public UserGetDto findById(Long id) {
-        User user = userEntityService.getByIdWithControl(id, false);
+        User user = userEntityService.getByIdWithControl(id);
         return mapper.map(user, UserGetDto.class);
     }
 
@@ -67,7 +67,7 @@ public class UserService {
     }
 
     public UserGetDto update(UserPatchDto userPatchDto, Long id) {
-        User user = userEntityService.getByIdWithControl(id, false);
+        User user = userEntityService.getByIdWithControl(id);
 
         mapper.getConfiguration().setSkipNullEnabled(true);
         mapper.map(userPatchDto, user);

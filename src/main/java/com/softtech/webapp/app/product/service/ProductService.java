@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public ProductGetDto findById(Long id) {
-        Product product = productEntityService.getByIdWithControl(id, false);
+        Product product = productEntityService.getByIdWithControl(id);
         return mapper.map(product, ProductGetDto.class);
     }
 
@@ -40,12 +40,12 @@ public class ProductService {
     }
 
     public void delete(Long id) {
-        Product product = productEntityService.getByIdWithControl(id, false);
+        Product product = productEntityService.getByIdWithControl(id);
         productEntityService.delete(product);
     }
 
     public ProductGetDto update(BigDecimal price, Long id) {
-        Product product = productEntityService.getByIdWithControl(id, false);
+        Product product = productEntityService.getByIdWithControl(id);
 
         if(price.compareTo(BigDecimal.valueOf(0)) < 0)
             throw new BusinessException(ProductErrorMessage.PRODUCT_PRICE_BELOW_ZERO);
