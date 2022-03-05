@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductEntityService extends BaseEntityService<Product, ProductDao> {
     public ProductEntityService(ProductDao dao) {
-        super(dao);
+        super(dao, Product.class);
     }
 
     public Product findByProductNameUpper(String productName) {

@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class CommentEntityService extends BaseEntityService<Comment, CommentDao> {
     public CommentEntityService(CommentDao dao) {
-        super(dao);
+        super(dao, Comment.class);
     }
 
     public List<Comment> findAllByUserId(Long userId) {

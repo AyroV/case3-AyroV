@@ -2,7 +2,6 @@ package com.softtech.webapp.app.gen.exception;
 
 import com.softtech.webapp.app.gen.exceptions.BusinessException;
 import com.softtech.webapp.app.gen.exceptions.ItemNotFoundException;
-import com.softtech.webapp.app.gen.exceptions.RelationNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +47,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public final ResponseEntity<Object> handleAllItemNotFoundException(ItemNotFoundException ex, WebRequest webRequest){
-
         LocalDateTime errorDate = LocalDateTime.now();
         String message = ex.getErrorMessage().getMessage();
         String description = webRequest.getDescription(false);
@@ -56,18 +54,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponse exceptionResponse = new ExceptionResponse(dateTimeFormatter.format(errorDate), message, description);
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public final ResponseEntity<Object> handleAllRelationNotFoundException(RelationNotFoundException ex, WebRequest webRequest){
-
-        LocalDateTime errorDate = LocalDateTime.now();
-        String message = ex.getErrorMessage().getMessage();
-        String description = webRequest.getDescription(false);
-
-        ExceptionResponse exceptionResponse = new ExceptionResponse(dateTimeFormatter.format(errorDate), message, description);
-
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserEntityService extends BaseEntityService<User, UserDao> {
     public UserEntityService(UserDao dao) {
-        super(dao);
+        super(dao, User.class);
     }
 
     public User findByUsername(String username) {

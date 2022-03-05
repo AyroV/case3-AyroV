@@ -2,6 +2,7 @@ package com.softtech.webapp.app.gen.service;
 
 import com.softtech.webapp.app.gen.entity.BaseEntity;
 import com.softtech.webapp.app.gen.enums.ErrorMessage;
+import com.softtech.webapp.app.gen.enums.IErrorMessage;
 import com.softtech.webapp.app.gen.exceptions.ItemNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public abstract class BaseEntityService<E extends BaseEntity, D extends JpaRepository<E, Long>> {
     private final D dao;
+    private final Class<E> type;
 
     public List<E> findAll(){
         return dao.findAll();
@@ -67,8 +69,11 @@ public abstract class BaseEntityService<E extends BaseEntity, D extends JpaRepos
 
         if (entityOptional.isPresent())
             entity = entityOptional.get();
-        else
-            throw new ItemNotFoundException(ErrorMessage.ITEM_NOT_FOUND);
+        else {
+            IErrorMessage message = ErrorMessage.ITEM_NOT_FOUND;
+            message.concatMessage("-> " + type.getSimpleName());
+            throw new ItemNotFoundException(message);
+        }
 
         return entity;
     }
